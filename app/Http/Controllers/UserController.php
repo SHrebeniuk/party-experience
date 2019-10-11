@@ -18,7 +18,7 @@ class UserController extends Controller
 	public function update()
 	{ 
 		request()->validate([
-			'name' => 'required',
+			'nickname' => 'required',
 			'email' => 'required|email',
 			'description' => 'required',
 		]);
@@ -26,7 +26,7 @@ class UserController extends Controller
 		$user = auth()->user();
 
 		$user->fill([
-			'name' => request('name'),
+			'nickname' => request('nickname'),
 			'email' => request('email'),
 			'description' => request('description'),
 			'photo' => request('photo')

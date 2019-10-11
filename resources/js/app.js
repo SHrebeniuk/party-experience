@@ -27,9 +27,12 @@ Vue.use(VueSweetalert2);
 
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 
+// User
+Vue.component('user-edit', require('./components/user/Edit.vue').default);
+
 // Team
-Vue.component('team-create', require('./components/admin/team/Create.vue').default);
-Vue.component('teams-list', require('./components/admin/team/Index.vue').default);
+Vue.component('team-create', require('./components/team/Create.vue').default);
+Vue.component('teams-list', require('./components/team/Index.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

@@ -20,6 +20,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::prefix('v1/')->group(function () {
 	Route::post('/images/{type}', 'Api\ImageController@upload');
 
+	// User
+	Route::put('/users/{id}', 'Api\UserController@update');
+
 	// Team
 	Route::post('/teams', 'Api\TeamController@create');
 	Route::put('/teams/{id}', 'Api\TeamController@update');
