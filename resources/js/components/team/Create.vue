@@ -8,6 +8,7 @@
 			trigger="#pick-avatar"
 			:labels="cropper.labels"
 			output-mime="image/png"
+			:upload-headers="cropper.headers"
 			:output-options="cropper.options"
 			:upload-url="'/api/v1/images/teams'"/>
 		</div>
@@ -22,7 +23,14 @@
 		</div>
 		<div class="form-group">
 			<label :for="instance + 'description'">Description</label>
-			<textarea rows="5" type="text" class="form-control" :class="{'error-shadow': $v.form.description.$error}" :id="instance + 'description'" placeholder="Team description" v-model="form.description"></textarea>
+			<!-- <textarea rows="5" type="text" class="form-control" :class="{'error-shadow': $v.form.description.$error}" :id="instance + 'description'" placeholder="Team description" v-model="form.description"></textarea> -->
+			<vue-editor
+			:id="instance + 'description'"
+			:class="{'error-shadow': $v.form.description.$error}"
+			:placeholder="'Team description'"
+			v-model="form.description"
+			useCustomImageHandler
+			@imageAdded="handleImageCategory"></vue-editor>
 		</div>
 		<div class="d-flex justify-content-center">
 			<button class="btn btn-success" :disabled="disabled" @click="submit">
@@ -39,11 +47,16 @@
 <script>
 	import { required } from 'vuelidate/lib/validators'
 	import AvatarCropper from "vue-avatar-cropper"
+	import { VueEditor, Quill } from 'vue2-editor'
+
+	var AlignStyle = Quill.import('attributors/style/align')
+	Quill.register(AlignStyle, true);
 
 	export default {
 		name: 'TeamCreate',
 
 		components: {
+			VueEditor,
 			AvatarCropper
 		},
 
@@ -57,6 +70,9 @@
 					labels: {
 						submit: 'Submit',
 						cancel: 'Cancel'
+					},
+					headers: {
+						'Authorization': 'Bearer ' + localStorage.getItem('partyExpToken')
 					},
 					options: {
 						minWidth: 640,
@@ -81,14 +97,6 @@
 			}
 		},
 
-		computed: {
-
-		},
-
-		mounted() {
-
-		},
-
 		methods: {
 			submit() {
 				this.$v.form.$touch();
@@ -104,10 +112,10 @@
 						.then(response => {
 							this.$swal('Your Team was created!', '', 'success')
 							.then((willDelete) => {
-								window.location.href = '/teams'
+								window.location.href = '/teams/show/' + this.form.title
 							})
 							.catch((willDelete) => {
-								window.location.href = '/teams'
+								window.location.href = '/teams/show/' + this.form.title
 							});
 							this.disabled = false
 						})
@@ -122,10 +130,10 @@
 						.then(response => {
 							this.$swal('Your Team was updated!', '', 'success')
 							.then((willDelete) => {
-								window.location.href = '/teams'
+								window.location.href = '/teams/show/' + this.form.title
 							})
 							.catch((willDelete) => {
-								window.location.href = '/teams'
+								window.location.href = '/teams/show/' + this.form.title
 							});
 							this.disabled = false
 						})
@@ -136,6 +144,22 @@
 					}
 
 				}
+			},
+
+			handleImageCategory(file, Editor, cursorLocation) {
+				var formData = new FormData();
+				formData.append('file', file);
+				axios({
+					url: '/api/v1/images/teams',
+					method: 'POST',
+					data: formData
+				})
+				.then((result) => {
+					let url = result.data.image_url
+					Editor.insertEmbed(cursorLocation, 'image', url);
+				})
+				.catch((err) => {
+				})
 			},
 
 			handleUploaded(resp) {

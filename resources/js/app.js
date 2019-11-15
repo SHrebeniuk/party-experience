@@ -25,14 +25,18 @@ Vue.use(VueSweetalert2);
 // const files = require.context('./', true, /\.vue$/i);
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
 
-Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+// Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+
+Vue.component('auth-modal', require('./components/AuthModal.vue').default);
 
 // User
 Vue.component('user-edit', require('./components/user/Edit.vue').default);
 
 // Team
 Vue.component('team-create', require('./components/team/Create.vue').default);
+Vue.component('team-show', require('./components/team/Show.vue').default);
 Vue.component('teams-list', require('./components/team/Index.vue').default);
+Vue.component('all-teams', require('./components/team/AllTeams.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

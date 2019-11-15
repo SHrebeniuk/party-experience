@@ -17,26 +17,34 @@
 			<ul class="navbar-nav ml-auto">
 				<!-- Authentication Links -->
 				@guest
-				<li class="nav-item">
+				{{-- <li class="nav-item">
 					<a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
 				</li>
 				@if (Route::has('register'))
 				<li class="nav-item">
 					<a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
 				</li>
-				@endif
+				@endif --}}
 				@else
 				<li class="nav-item dropdown">
 					<a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-						{{ Auth::user()->name }} <span class="caret"></span>
+						<img src="{{ auth()->user()->photo }}" alt="" class="mr-2 br-50" width="30" height="30">
+						{{ Auth::user()->name }}
+						<span class="caret"></span>
 					</a>
 
 					<div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+						<a class="dropdown-item" href="{{ route('profile') }}">
+							Profile
+						</a>
+						<a class="dropdown-item" href="{{ route('my-teams') }}">
+							My Teams
+						</a>
 						<a class="dropdown-item" href="{{ route('logout') }}"
-						onclick="event.preventDefault();
-						document.getElementById('logout-form').submit();">
-						{{ __('Logout') }}
-					</a>
+							onclick="event.preventDefault();
+							document.getElementById('logout-form').submit();">
+							{{ __('Logout') }}
+						</a>
 
 					<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
 						@csrf

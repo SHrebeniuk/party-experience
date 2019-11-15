@@ -10,7 +10,10 @@
 				</div>
 			</div>
 			<div class="d-flex align-items-center">
-				<a :href="'/teams/' + item.id">
+				<a :href="'/teams/show/' + item.title" class="mr-4">
+					<i class="fa fa-eye fa-2x"></i>
+				</a>
+				<a :href="'/teams/' + item.id" v-if="item.owner_id == user.id">
 					<i class="fa fa-pencil fa-2x"></i>
 				</a>
 			</div>
@@ -21,7 +24,7 @@
 	export default {
 		name: 'TeamsList',
 
-		props: ['teams'],
+		props: ['teams', 'user'],
 
 		data() {
 			return {

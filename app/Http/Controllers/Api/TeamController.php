@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Team;
+use App\User;
 
 class TeamController extends Controller
 {
@@ -41,10 +42,12 @@ class TeamController extends Controller
         ]);
 
         $team->owner_id = request('owner_id');
-
-        $team->users()->attach(request('owner_id'));
-
+        // $team->users()->attach(request('owner_id'));
         $team->save();
+
+        $user = auth()->user();
+        $user->team_id = $team->id;
+        $user->save();
 
         return response()->json($team);
     }
@@ -114,5 +117,35 @@ class TeamController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function join($id, $type)
+    {
+        $team = Team::findOrFail($id);
+
+        $type == 'detach' ? $team->recruits()->detach(auth()->user()->id)
+                          : $team->recruits()->attach(auth()->user()->id);
+
+        $teams = Team::where('is_shown', true)->with('recruits')->get();
+
+        return response()->json($teams);
+    }
+
+    public function updateMember($id, $member_id, $type)
+    {
+        $team = Team::findOrFail($id);
+
+        $user = User::findOrFail($member_id);
+
+        if($type == 'accept') {
+            $user->team_id = $id;
+            $user->save();
+        }
+
+        $team->recruits()->detach($member_id);
+
+        $team = Team::where('id', $id)->with('recruits', 'users')->first();
+
+        return response()->json($team);
     }
 }

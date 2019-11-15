@@ -5,12 +5,17 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Laravel\Passport\HasApiTokens;
 use App\Role;
 use App\Team;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
-    use Notifiable;
+    use HasApiTokens, Notifiable;
+
+    const USER_TEAM_OWNER = 0;
+    const USER_TEAM_OFFICER = 1;
+    const USER_TEAM_SOLDER = 2;
 
     /**
      * The attributes that are mass assignable.
@@ -18,7 +23,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'nickname', 'email', 'description', 'password',
+        'name', 'nickname', 'email', 'description', 'password', 'photo'
     ];
 
     /**
@@ -30,7 +35,7 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    protected $with = [ "role", "teams" ];
+    protected $with = [ "role", "team" ];
 
     /**
      * The attributes that should be cast to native types.
@@ -44,6 +49,11 @@ class User extends Authenticatable
     public function role()
     {
         return $this->belongsTo(Role::class, 'role_id');
+    }
+
+    public function team()
+    {
+      return $this->belongsTo(Team::class, 'team_id');
     }
 
     public function teams()

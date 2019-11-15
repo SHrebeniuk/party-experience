@@ -9,17 +9,31 @@ class TeamController extends Controller
 {
     public function index()
     {
-    		$teams = auth()->user()->teams()->get();
+    	$teams = Team::where('is_shown', true)->with('recruits')->get();
 
-      	return view('admin.team.index', ['teams' => $teams]);
+      	return view('team.index', ['teams' => $teams]);
     }
 
     public function show($id)
     {
-    		$team = Team::findOrFail($id);
+    	$team = Team::findOrFail($id);
 
-      	return view('admin.team.create', ['team' => $team]);
+      	return view('team.create', ['team' => $team]);
     }
 
+    public function userTeams()
+    {
+        $teams = auth()->user()->teams()->get();
+
+        return view('team.my-teams', ['teams' => $teams]);
+    }
+
+    
+    public function showSingle($title)
+    {
+        $team = Team::where(['title' => $title])->with('recruits', 'users')->first();
+
+        return view('team.show', ['team' => $team]);
+    }
     
 }

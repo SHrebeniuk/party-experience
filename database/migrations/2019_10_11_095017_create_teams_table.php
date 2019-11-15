@@ -19,6 +19,7 @@ class CreateTeamsTable extends Migration
             $table->string('title')->unique();
             $table->string('description');
             $table->string('subdescription')->nullable();
+            $table->boolean('is_shown')->default(false);
             $table->string('image_url')->default('teams/default-team.png');
             $table->timestamps();
         });

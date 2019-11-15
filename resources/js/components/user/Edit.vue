@@ -8,6 +8,7 @@
 			trigger="#pick-avatar"
 			:labels="cropper.labels"
 			output-mime="image/png"
+			:upload-headers="cropper.headers"
 			:output-options="cropper.options"
 			:upload-url="'/api/v1/images/users'"/>
 		</div>
@@ -15,6 +16,10 @@
 		<div class="form-group">
 			<label :for="instance + 'nickname'">Nicknickname</label>
 			<input type="text" class="form-control" :class="{'error-shadow': $v.form.nickname.$error}" :id="instance + 'nickname'" placeholder="Nickname" v-model="form.nickname">
+		</div>
+		<div class="form-group">
+			<label :for="instance + 'name'">Name</label>
+			<input type="text" class="form-control" :class="{'error-shadow': $v.form.name.$error}" :id="instance + 'name'" placeholder="Nickname" v-model="form.name">
 		</div>
 		<div class="form-group">
 			<label :for="instance + 'email'">Email</label>
@@ -51,6 +56,9 @@
 						submit: 'Submit',
 						cancel: 'Cancel'
 					},
+					headers: {
+						'Authorization': 'Bearer ' + localStorage.getItem('partyExpToken')
+					},
 					options: {
 						minWidth: 640,
 						minHeight: 640,
@@ -62,7 +70,7 @@
 					title: null,
 					subdescription: null,
 					description: null,
-					image_url: 'users/default-user.png'
+					photo: 'users/default-user.png'
 				}
 			}
 		},
@@ -70,6 +78,7 @@
 		validations: {
 			form: {
 				nickname: { required },
+				name: { required },
 				email: { required, email }
 			}
 		},

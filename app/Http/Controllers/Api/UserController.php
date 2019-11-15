@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Team;
 use App\User;
 
 class UserController extends Controller
@@ -79,7 +80,7 @@ class UserController extends Controller
         $user = User::findOrFail($id);
 
         $user->fill([
-            'name' => 'required',
+            'name' => request('name'),
             'nickname' => request('nickname'),
             'email' => request('email'),
             'description' => request('description'),
@@ -100,5 +101,17 @@ class UserController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function removeUser($id)
+    {
+        $user = User::findOrFail($id);
+        $team = Team::findOrFail($user->team_id);
+
+        $user->team_id = null;
+        $user->team_role = null;
+        $user->save();
+
+        return response()->json($team);
     }
 }
