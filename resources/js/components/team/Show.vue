@@ -63,9 +63,9 @@
 						</div>
 						
 						<div class="d-flex" v-if="item.id !== user.id">
-							<button class="btn btn-success mr-3">
+							<!-- <button class="btn btn-success mr-3">
 								<i class="fa fa-envelope"></i>
-							</button>
+							</button> -->
 							<button class="btn btn-danger" @click="removeMembers(item)">
 								<i class="fa fa-times"></i>
 							</button>
@@ -130,12 +130,6 @@
 							swal(item.nickname + ' was removed!',
 								'',
 								'success',
-								);
-						})
-						.catch(error => {
-							this.$swal('Error',
-								'',
-								'error',
 								);
 						})
 					}

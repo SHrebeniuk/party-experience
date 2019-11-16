@@ -1,8 +1,8 @@
 /node_modules
 /public/hot
 /public/storage
-/public/js/app.js
-/public/css/app.css
+/public/js
+/public/css
 /storage/*.key
 !/storage/app/public/teams/default-team.png
 !/storage/app/public/users/default-user.png
@@ -16,3 +16,4 @@ yarn-error.log
 .DS_Store
 composer.lock
 yarn.lock
+public/mix-manifest.json

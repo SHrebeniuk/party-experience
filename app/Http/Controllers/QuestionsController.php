@@ -1,13 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Team;
-use App\User;
+use App\Question;
 
-class UserController extends Controller
+class QuestionsController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,7 +14,9 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        $questions = Question::with('answers')->get();
+
+        return view('admin.faq.questions', ['questions' => $questions]);
     }
 
     /**
@@ -26,7 +26,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.faq.create-question');
     }
 
     /**
@@ -48,7 +48,9 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+        $question = Question::findOrFail($id);
+
+        return view('admin.faq.create-question', ['question' => $question]);
     }
 
     /**
@@ -71,25 +73,7 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        request()->validate([
-            'name' => 'required',
-            'nickname' => 'required',
-            'email' => 'required|email',
-        ]);
-
-        $user = User::findOrFail($id);
-
-        $user->fill([
-            'name' => request('name'),
-            'nickname' => request('nickname'),
-            'email' => request('email'),
-            'description' => request('description'),
-            'photo' => request('photo')
-        ]);
-
-        $user->save();
-
-        return response()->json($user);
+        //
     }
 
     /**
@@ -101,19 +85,5 @@ class UserController extends Controller
     public function destroy($id)
     {
         //
-    }
-
-    public function removeUser($id)
-    {
-        $user = User::findOrFail($id);
-        $team_id = $user->team_id;
-
-        $user->team_id = null;
-        $user->team_role = null;
-        $user->save();
-
-        $team = Team::where('id', $team_id)->with('recruits', 'users')->first();
-
-        return response()->json($team);
     }
 }

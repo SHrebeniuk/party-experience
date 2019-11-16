@@ -6,12 +6,12 @@
 		<div class="col-md-12">
 			<div class="card mb-3">
 				<div class="card-header d-flex justify-content-between">
-					<h5>Teams management</h5>
-					{{-- <a href="/teams/create">Create team</a> --}}
+					<h5>Faq Categories</h5>
+					<a href="/admin/categories/create">Create Category</a>
 				</div>
 			</div>
 
-			<teams-list :user="{{ auth()->user() }}" :teams="{{ $teams }}"></teams-list>
+			<categories-list :categories="{{ $categories }}"></categories-list>
 		</div>
 	</div>
 </div>

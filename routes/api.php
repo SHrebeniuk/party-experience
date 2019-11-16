@@ -37,6 +37,19 @@ Route::prefix('v1/')->group(function () {
 		Route::put('/teams/{id}/join/{type}', 'Api\TeamController@join');
 		Route::put('/teams/{id}/member/{member_id}/{type}', 'Api\TeamController@updateMember');
 
+		// Category
+		Route::get('/categories', 'Api\QuestionCategoriesController@index');
+		Route::post('/categories', 'Api\QuestionCategoriesController@create');
+		Route::put('/categories/{id}', 'Api\QuestionCategoriesController@update');
+		Route::delete('/categories/{id}', 'Api\QuestionCategoriesController@destroy');
+
+		// Question
+		Route::post('/questions', 'Api\QuestionController@create');
+		Route::put('/questions/{id}', 'Api\QuestionController@update');
+		Route::delete('/questions/{id}', 'Api\QuestionController@destroy');
+
+		// Answers
+		Route::post('/answers', 'Api\AnswerController@create');
 
 	});
 });

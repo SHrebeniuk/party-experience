@@ -23,19 +23,33 @@ Route::get('/login', function () {
 
 
 Route::group(['middleware' => ['auth', 'verified']], function () {
-	Route::get('/profile', 'UserController@edit')->name('profile');
 
-	// team
+	// Team
 	Route::get('/teams', 'TeamController@index');
 	Route::get('/my-teams', 'TeamController@userTeams')->name('my-teams');
 	Route::view('/teams/create', 'admin.team.create');
 	Route::get('/teams/{id}', 'TeamController@show');
 	Route::get('/teams/show/{title}', 'TeamController@showSingle')->name('show-team')->middleware('user_exist');
 
+	// Profile
+	Route::get('/profile', 'UserController@edit')->name('profile');
 	Route::patch('profile/update', 'UserController@update')->name('update-profile');
 	Route::post('profile/photo', 'UserController@updatePhoto')->name('update-photo');
+
+	// Questions
+	Route::get('/questions', 'QuestionsController@index');
+	Route::get('/questions/create', 'QuestionsController@create');
+	Route::get('/questions/{id}', 'QuestionsController@show');
 });
 
 Route::group(['middleware' => ['auth', 'is_admin']], function () {
 	Route::get('/admin', 'AdminController@show');
+
+	// Team
+	Route::get('/admin/teams', 'Admin\TeamController@index');
+
+	// Categories
+	Route::get('/admin/categories', 'QuestionCategoriesController@index');
+	Route::get('/admin/categories/create', 'QuestionCategoriesController@create');
+	Route::get('/admin/categories/{id}', 'QuestionCategoriesController@show');
 });

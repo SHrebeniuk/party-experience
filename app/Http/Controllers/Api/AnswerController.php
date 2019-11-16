@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers\Api;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Team;
-use App\User;
+use Illuminate\Http\Request;
+use App\Answer;
 
-class UserController extends Controller
+class AnswerController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -26,7 +25,20 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        request()->validate([
+            'body' => 'required',
+        ]);
+
+        $answer = Answer::create([
+            'body' => request('body'),
+        ]);
+
+        $answer->question_id = request('question_id');
+        $answer->author_id = request('author_id');
+
+        $answer->save();
+
+        return response()->json(['answer' => $answer]);
     }
 
     /**
@@ -71,25 +83,7 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        request()->validate([
-            'name' => 'required',
-            'nickname' => 'required',
-            'email' => 'required|email',
-        ]);
-
-        $user = User::findOrFail($id);
-
-        $user->fill([
-            'name' => request('name'),
-            'nickname' => request('nickname'),
-            'email' => request('email'),
-            'description' => request('description'),
-            'photo' => request('photo')
-        ]);
-
-        $user->save();
-
-        return response()->json($user);
+        //
     }
 
     /**
@@ -100,20 +94,11 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
-    }
+        // $answer = Answer::findOrFail($id);
+        // $answer->delete();
 
-    public function removeUser($id)
-    {
-        $user = User::findOrFail($id);
-        $team_id = $user->team_id;
+        // $answers = Answer::all();
 
-        $user->team_id = null;
-        $user->team_role = null;
-        $user->save();
-
-        $team = Team::where('id', $team_id)->with('recruits', 'users')->first();
-
-        return response()->json($team);
+        // return response()->json($answers);
     }
 }

@@ -4,10 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Team;
-use App\User;
+use App\Question;
 
-class UserController extends Controller
+class QuestionController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,7 +15,9 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        $questions = Question::all();
+
+        return response()->json($questions);
     }
 
     /**
@@ -26,7 +27,22 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        request()->validate([
+            'title' => 'required',
+            'body' => 'required',
+        ]);
+
+        $question = Question::create([
+            'title' => request('title'),
+            'body' => request('body'),
+        ]);
+
+        $question->category_id = request('category_id');
+        $question->author_id = request('author_id');
+
+        $question->save();
+
+        return response()->json(['question' => $question, 'user' => auth()->user()]);
     }
 
     /**
@@ -72,24 +88,23 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         request()->validate([
-            'name' => 'required',
-            'nickname' => 'required',
-            'email' => 'required|email',
+            'title' => 'required',
+            'body' => 'required',
         ]);
 
-        $user = User::findOrFail($id);
+        $question = Question::findOrFail($id);
 
-        $user->fill([
-            'name' => request('name'),
-            'nickname' => request('nickname'),
-            'email' => request('email'),
-            'description' => request('description'),
-            'photo' => request('photo')
+        $question->fill([
+            'title' => request('title'),
+            'body' => request('body'),
         ]);
 
-        $user->save();
+        $question->category_id = request('category_id');
+        $question->author_id = request('author_id');
 
-        return response()->json($user);
+        $question->save();
+
+        return response()->json($question);
     }
 
     /**
@@ -100,20 +115,11 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
-    }
+        $question = Question::findOrFail($id);
+        $question->delete();
 
-    public function removeUser($id)
-    {
-        $user = User::findOrFail($id);
-        $team_id = $user->team_id;
+        $questions = Question::all();
 
-        $user->team_id = null;
-        $user->team_role = null;
-        $user->save();
-
-        $team = Team::where('id', $team_id)->with('recruits', 'users')->first();
-
-        return response()->json($team);
+        return response()->json($questions);
     }
 }

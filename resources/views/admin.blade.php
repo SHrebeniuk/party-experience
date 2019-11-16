@@ -10,7 +10,7 @@
 	<title>{{ config('app.name', 'Laravel') }}</title>
 
 	<!-- Scripts -->
-	<script src="{{ asset('js/app.js') }}" defer></script>
+	<script src="{{ asset('js/admin.js') }}" defer></script>
 
 	<!-- Fonts -->
 	<link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -21,13 +21,13 @@
 	<link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 <body>
-	<div id="app">
+	<div id="app-admin">
 		@include('layouts.header')
 		
 		<div class="container mt-4">
 			<div class="row">
 				<header class="col-lg-4 col-xl-3">
-					@include('layouts.sidebar')
+					@include('admin.layouts.sidebar')
 				</header>
 				<main class="col">
 					@yield('content')

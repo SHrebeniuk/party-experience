@@ -4,10 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Team;
-use App\User;
+use App\QuestionCategory;
 
-class UserController extends Controller
+class QuestionCategoriesController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,7 +15,9 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        $categories = QuestionCategory::all();
+
+        return response()->json($categories);
     }
 
     /**
@@ -26,7 +27,18 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        request()->validate([
+            'title' => 'required',
+            'description' => 'required'
+        ]);
+
+        $category = QuestionCategory::create([
+            'title' => request('title'),
+            'description' => request('description'),
+            'image_url' => request('image_url')
+        ]);
+
+        return response()->json($category);
     }
 
     /**
@@ -71,25 +83,17 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        request()->validate([
-            'name' => 'required',
-            'nickname' => 'required',
-            'email' => 'required|email',
-        ]);
+        $category = QuestionCategory::findOrFail($id);
 
-        $user = User::findOrFail($id);
-
-        $user->fill([
-            'name' => request('name'),
-            'nickname' => request('nickname'),
-            'email' => request('email'),
+        $category->fill([
+            'title' => request('title'),
             'description' => request('description'),
-            'photo' => request('photo')
+            'image_url' => request('image_url')
         ]);
 
-        $user->save();
+        $category->save();
 
-        return response()->json($user);
+        return response()->json($category);
     }
 
     /**
@@ -100,20 +104,11 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
-    }
+        $category = QuestionCategory::findOrFail($id);
+        $category->delete();
 
-    public function removeUser($id)
-    {
-        $user = User::findOrFail($id);
-        $team_id = $user->team_id;
+        $categories = QuestionCategory::all();
 
-        $user->team_id = null;
-        $user->team_role = null;
-        $user->save();
-
-        $team = Team::where('id', $team_id)->with('recruits', 'users')->first();
-
-        return response()->json($team);
+        return response()->json($categories);
     }
 }

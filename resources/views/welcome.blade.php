@@ -42,6 +42,6 @@
         </div>
     </div>
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" async></script>
+    <script src="{{ mix('js/app.js') }}" async></script>
 </body>
 </html>
